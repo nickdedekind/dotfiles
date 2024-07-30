@@ -121,7 +121,7 @@ return {
         dap.adapters.gdb = {
             type = "executable",
             command = "gdb",
-            args = { "--quiet", "--interpreter=dap" },
+            args = { "--interpreter=dap" },
         }
 
         dap.configurations.cpp = {

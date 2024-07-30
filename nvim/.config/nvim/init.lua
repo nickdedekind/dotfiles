@@ -25,6 +25,20 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = {
+    name = "xclip",
+    copy = {
+        ["+"] = "xclip -i -selection clipboard",
+        ["*"] = "xclip -i -selection clipboard",
+    },
+    paste = {
+        ["+"] = "xclip -o -selection clipboard",
+        ["*"] = "xclip -o -selection clipboard",
+    },
+    cache_enabled = false,
+}
+
+vim.opt.shell = "bash"
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -65,6 +79,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- global status bar
+vim.opt.laststatus = 3
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -83,6 +100,7 @@ vim.keymap.set("i", "jk", "<Esc>", { desc = "Move focus to the upper window" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- vim.keymap.set("i", "jk", "<Esc>", { desc = "Move focus to the upper window" })
+vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { silent = true })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
@@ -93,4 +111,3 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 require("config.lazy")
-vim.lsp.set_log_level("trace")
