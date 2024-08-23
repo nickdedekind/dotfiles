@@ -43,6 +43,11 @@ vim.opt.shell = "bash"
 -- Enable break indent
 vim.opt.breakindent = true
 
+vim.opt.tabstop = 4
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.shiftwidth = 4
+
 -- Save undo history
 vim.opt.undofile = true
 
@@ -100,7 +105,27 @@ vim.keymap.set("i", "jk", "<Esc>", { desc = "Move focus to the upper window" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- vim.keymap.set("i", "jk", "<Esc>", { desc = "Move focus to the upper window" })
-vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { silent = true })
+vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { silent = true }) -- escape terminal mode
+vim.keymap.set("n", "<C-t>", ":ToggleTerm<CR>", { silent = true })
+
+function QuickListMove(direction)
+    if vim.tbl_isempty(vim.fn.getqflist()) == false then
+        local ok, result = pcall(function()
+            vim.cmd(direction)
+        end)
+        if not ok and result then
+            vim.api.nvim_err_writeln(result:match("(E%d+: .*)") or result)
+        end
+    end
+end
+
+vim.keymap.set("n", "<C-P>", function()
+    QuickListMove("cprevious")
+end, { desc = "Previous quicklist item" })
+
+vim.keymap.set("n", "<C-N>", function()
+    QuickListMove("cnext")
+end, { desc = "Next quicklist item" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
@@ -108,6 +133,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank()
     end,
+})
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+
+    -- delay update diagnostics
+    update_in_insert = false,
 })
 
 require("config.lazy")

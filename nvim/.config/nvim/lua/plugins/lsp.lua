@@ -89,6 +89,9 @@ return { -- LSP Configuration & Plugins
                 -- or a suggestion from your LSP for this to activate.
                 map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
+                -- Open line diagnostics popup
+                map("<leader>cd", vim.diagnostic.open_float, "[C]ode [D]iagnostics")
+
                 -- Opens a popup that displays documentation about the word under your cursor
                 --  See `:help K` for why this keymap.
                 map("K", vim.lsp.buf.hover, "Hover Documentation")
@@ -158,13 +161,34 @@ return { -- LSP Configuration & Plugins
             clangd = {
                 filtypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto", "cc" },
 
-                -- cmd = { "clangd", "--background-index"},
-                -- init_options = {
-                -- 	clangdFileStatus = true,
-                -- 	clangdSemanticHighlighting = true,
-                -- },
+                cmd = {
+                    "clangd",
+                    "--background-index",
+                    "--clang-tidy",
+                    -- "--all-scopes-completion",
+                    "--pretty",
+                    "--header-insertion=never",
+                    "-j=4",
+                    "--header-insertion-decorators",
+                    "--function-arg-placeholders",
+                    "--completion-style=detailed",
+                },
+                init_options = {
+                    clangdFileStatus = true,
+                    clangdSemanticHighlighting = true,
+                },
+                capabilities = {
+                    textDocument = {
+                        completion = {
+                            completionItem = {
+                                snippetSupport = true,
+                            },
+                        },
+                    },
+                },
             },
-            -- gopls = {},
+            gopls = {},
+            yamlls = {},
             pyright = {
                 filetypes = { "python" },
             },
@@ -222,11 +246,12 @@ return { -- LSP Configuration & Plugins
                 end,
             },
         })
+
         require("lspconfig").clangd.setup({
             on_attach = function(event)
                 vim.keymap.set(
                     "n",
-                    "<leader>gs",
+                    "gs",
                     ":ClangdSwitchSourceHeader<CR>",
                     { buffer = event.buf, desc = "LSP: [G]oto [S]ource/Header" }
                 )

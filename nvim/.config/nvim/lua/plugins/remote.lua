@@ -8,6 +8,12 @@ return {
     },
     config = function()
         require("remote-nvim").setup({
+            offline_mode = {
+                enabled = true,
+                no_github = true,
+                cache_dir = "/home/ndedekin/local/nvim/cache",
+            },
+
             client_callback = function(port, workspace_config)
                 local cmd = ('tmux new-window -n %s "nvim --server localhost:%s --remote-ui"'):format(
                     ("'Remote: %s'"):format(workspace_config.host),
