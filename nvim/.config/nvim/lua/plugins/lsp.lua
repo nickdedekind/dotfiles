@@ -163,12 +163,12 @@ return { -- LSP Configuration & Plugins
 
                 cmd = {
                     "clangd",
-                    "--background-index",
-                    "--clang-tidy",
+                    -- "--background-index",
+                    -- "--clang-tidy",
                     -- "--all-scopes-completion",
                     "--pretty",
                     "--header-insertion=never",
-                    "-j=4",
+                    -- "-j=4",
                     "--header-insertion-decorators",
                     "--function-arg-placeholders",
                     "--completion-style=detailed",
